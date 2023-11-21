@@ -1,6 +1,7 @@
 #ignore file with API key
-**/config/
+
 *.ini
+*.pem
 
 ### macOS ###
 # General
