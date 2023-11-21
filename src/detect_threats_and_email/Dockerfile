@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /usr/src/app
 
 # Copy requirements first to leverage Docker cache
-COPY requirements.txt ./
+COPY src/detect_threats_and_email/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
