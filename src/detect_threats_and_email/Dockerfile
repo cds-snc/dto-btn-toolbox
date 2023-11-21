@@ -1,17 +1,22 @@
-FROM python:3.9
+# Use a specific, slim version of Python image
+FROM python:3.9-slim
 
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy the application code
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
 COPY src/detect_threats_and_email/ .
 
 # Copy config files
 COPY config/config.ini /usr/config/config.ini
 COPY config/cacert-2023-01-10.pem /usr/config/cacert-2023-01-10.pem
 
-# Install packages
-RUN pip install --no-cache-dir -r requirements.txt
-
+# Expose port
 EXPOSE 80
 
+# Command to run the application
 CMD ["python", "./PFT_detect_threats_and_email.py"]
