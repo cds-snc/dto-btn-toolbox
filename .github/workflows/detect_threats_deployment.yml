@@ -18,7 +18,7 @@ jobs:
       - name: Decrypt large secret
         run: ./scripts/decrypt_secrets.sh
         env:
-          APPLICATION_PROPERTIES_PASSPHRASE: ${{ secrets.APPLICATION_SECRETS_PASSPHRASE }}
+          APPLICATION_SECRETS_PASSPHRASE: ${{ secrets.APPLICATION_SECRETS_PASSPHRASE }}
 
         # Add Python setup step if needed
       - name: Set up Python
