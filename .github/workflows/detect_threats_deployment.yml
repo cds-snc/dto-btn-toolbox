@@ -2,12 +2,12 @@ name: Deploy to AKS Cluster
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - "src/detect_threats_and_email/**"
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - "src/detect_threats_and_email/**"
 jobs:
