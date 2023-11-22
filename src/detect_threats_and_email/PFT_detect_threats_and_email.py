@@ -21,7 +21,7 @@ problem = client.pagesuccess.problem
 print("Fetched the problem collection.")
 
 N_DAYS_AGO = 7
-
+#
 today = datetime.now()
 n_days_ago = today - timedelta(days=N_DAYS_AGO)
 n_days_ago = n_days_ago.strftime("%Y-%m-%d")
