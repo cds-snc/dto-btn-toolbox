@@ -13,6 +13,6 @@ spec:
         spec:
           containers:
             - name: detect-threats-cj
-              image: tbsacr.azurecr.io:detect-threats-cj:1.0.0 # Replace with your Docker image name and tag
+              image: tbsacr.azurecr.io/detect-threats-cj:1.0.0 # Replace with your Docker image name and tag
               imagePullPolicy: Always # Always pull the image on job restart
           restartPolicy: OnFailure # Restart policy could be Always, OnFailure, or Never
