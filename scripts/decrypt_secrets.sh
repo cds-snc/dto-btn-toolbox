@@ -4,11 +4,11 @@
 export GPG_TTY=$(tty)
 
 # Decrypt config.ini.gpg
-gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" \
+gpg --quiet --batch --yes --decrypt --passphrase="$APPLICATION_SECRETS_PASSPHRASE" \
     --output ./config/config.ini ./config/config.ini.gpg
 
 # Decrypt cacert-2023-01-10.pem.gpg
-gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" \
+gpg --quiet --batch --yes --decrypt --passphrase="$APPLICATION_SECRETS_PASSPHRASE" \
     --output ./config/cacert-2023-01-10.pem ./config/cacert-2023-01-10.pem.gpg
 
 # List contents of the config directory
