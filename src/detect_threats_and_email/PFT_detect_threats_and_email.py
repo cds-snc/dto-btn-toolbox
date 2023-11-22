@@ -82,6 +82,9 @@ today_formatted = today.strftime("%Y-%m-%d")
 
 formatted_output = f"\n # Comments containing threat words from {n_days_ago} to {today_formatted} (7 days): {problemCount}\n\n"
 
+formatted_output += "* [English threat terms](https://github.com/alpha-canada-ca/dto-btn-toolbox/blob/master/src/detect_threats_and_email/threat_terms/english_threats)\n"
+formatted_output += "* [French threat terms](https://github.com/alpha-canada-ca/dto-btn-toolbox/blob/master/src/detect_threats_and_email/threat_terms/french_threats)\n"
+
 for doc in problem.find(threats_in_past_7_days_query):
     formatted_output += "\n"  # Ensure a clear line break before each document
     for field, value in doc.items():
