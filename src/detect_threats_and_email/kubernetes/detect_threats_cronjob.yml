@@ -4,7 +4,7 @@ metadata:
   name: detect-threats-cj
 spec:
   # Define the schedule in Cron format, e.g., "*/5 * * * *" would be every 5 minutes
-  schedule: "* 12 * * 5" # Every Friday at 12:00 PM
+  schedule: "0 12 * * 5" # Every Friday at 12:00 PM
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 3
   jobTemplate:
