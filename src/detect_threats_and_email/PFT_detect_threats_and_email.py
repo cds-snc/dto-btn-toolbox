@@ -20,15 +20,15 @@ problem = client.pagesuccess.problem
 
 print("Fetched the problem collection.")
 
-N_DAYS_AGO = 7
+N_DAYS_AGO = 1
 #
 today = datetime.now()
 n_days_ago = today - timedelta(days=N_DAYS_AGO)
 n_days_ago = n_days_ago.strftime("%Y-%m-%d")
 
-past_7_days_query = {"problemDate": {"$gte": n_days_ago}}
-problemCount = problem.count_documents(past_7_days_query)
-print("Amount of entries in last 7 days:")
+past_n_days_query = {"problemDate": {"$gte": n_days_ago}}
+problemCount = problem.count_documents(past_n_days_query)
+print(f"Amount of entries in last {N_DAYS_AGO} days:")
 print(problemCount)
 
 
@@ -56,7 +56,7 @@ threat_keywords = english_threat_keywords + french_threat_keywords
 pattern_threat_keywords = "|".join(threat_keywords)
 
 
-threats_in_past_7_days_query = {
+threats_in_past_n_days_query = {
     "$and": [
         {"problemDate": {"$gte": n_days_ago}},
         {"problemDetails": Regex(pattern_threat_keywords, "i")},
@@ -75,17 +75,17 @@ fields_to_omit = [
     "urlEntries",
 ]
 
-problemCount = problem.count_documents(threats_in_past_7_days_query)
+problemCount = problem.count_documents(threats_in_past_n_days_query)
 
 # Initialize an empty string to store the formatted output
 today_formatted = today.strftime("%Y-%m-%d")
 
-formatted_output = f"\n # Comments containing threat words from {n_days_ago} to {today_formatted} (7 days): {problemCount}\n\n"
+formatted_output = f"\n # Comments containing threat words from {n_days_ago} to {today_formatted} ({N_DAYS_AGO} days): {problemCount}\n\n"
 
 formatted_output += "* [English threat terms](https://github.com/alpha-canada-ca/dto-btn-toolbox/blob/master/src/detect_threats_and_email/threat_terms/english_threats)\n"
 formatted_output += "* [French threat terms](https://github.com/alpha-canada-ca/dto-btn-toolbox/blob/master/src/detect_threats_and_email/threat_terms/french_threats)\n"
 
-for doc in problem.find(threats_in_past_7_days_query):
+for doc in problem.find(threats_in_past_n_days_query):
     formatted_output += "\n"  # Ensure a clear line break before each document
     for field, value in doc.items():
         if field not in fields_to_omit:
