@@ -1,99 +1,92 @@
-import pickletools
-import gzip
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.preprocessing import OneHotEncoder, MultiLabelBinarizer
-from configparser import ConfigParser
-import pickle
-import warnings
-import sys
 import time
-import re
-from nltk.stem.snowball import SnowballStemmer
-from nltk.corpus import stopwords
 import requests
-from airtable import Airtable
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
-import numpy as np
-import nltk
 from urllib.parse import urlparse, urlunparse
 
+# [Rest of your imports like pandas, sklearn, etc. as per your original code]
+
+
+def remove_query_params_and_fragments(url):
+    """Remove query parameters and fragments from a URL."""
+    parsed = urlparse(url)
+    new_url = urlunparse((parsed.scheme, parsed.netloc, parsed.path, "", "", ""))
+    return new_url
+
+
+# Set up Google Sheets API credentials
 scope = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive",
 ]
-
-# use the credentials from client_secret.json to authorize Google Sheets API access
 creds = ServiceAccountCredentials.from_json_keyfile_name(
-    "client_secret.json", scope)
+    "../../config/tier1_2_spreadsheets_credentials.json", scope
+)
 client = gspread.authorize(creds)
 
-# open the specific Google Sheet
+# Open the specific Google Sheet
 sheet = client.open("Tier 2 - Urls").sheet1
-
 list_of_entries = sheet.get_all_records()
 
+bad_rows = 0
+deleted_rows = 0
+updated_rows = 0
 
-def remove_query_params(url):
-    parsed = urlparse(url)
-    new_url = urlunparse(
-        (parsed.scheme, parsed.netloc, parsed.path, '', '', ''))
-    return new_url
+counter = 2  # Start from the second row (assuming first row is header)
+updates = []  # List to store updates
+row_deletions = []  # List to store rows to be deleted
 
-
-counter = 2
-# Iterate over each entry in list_of_entries
+# Iterate over all list_of_entries
 for entry in list_of_entries:
-    # check if the URL starts with "www." and append "https" to it
-    url = entry['URL']
+    url = entry["URL"]
+    original_url = url  # Preserve the original URL for comparison
 
+    # Check and remove query params and fragments
     parsed_url = urlparse(url)
-    if parsed_url.query:
-        url = remove_query_params(url)
-        sheet.update_cell(counter, 1, url)  # update cell at current counter
-        print("REMOVED QUERY PARAMS.")
+    if parsed_url.query or parsed_url.fragment or url.endswith("#"):
+        url = remove_query_params_and_fragments(url)
+        updates.append({"range": f"A{counter}", "values": [[url]]})
+        print(f"{counter}, REMOVED QUERY PARAMS AND FRAGMENTS: {url}")
+        updated_rows += 1
 
     # Send an HTTP request to the modified URL
     response = None
     try:
-        response = requests.get(url)
-    except:
-        print("exception")
+        response = requests.get(url, timeout=10)
+    except Exception as e:
+        print(f"{counter}, Exception occurred: {e}")
 
-    if response is not None and 'adobedtm' in response.text:
-        sheet.update_cell(counter, 2, "AEM")
-    else:
-        sheet.update_cell(counter, 2, "non-AEM")
+    # Process the response
+    if response:
+        aem_status = "AEM" if "adobedtm" in response.text else "non-AEM"
+        updates.append({"range": f"B{counter}", "values": [[aem_status]]})
 
-    # Check if the page HTML contains "gc-pg-hlpfl" in any of the IDs
-    if response is not None and "gc-pg-hlpfl" in response.text:
-        print(f"{counter}, GOOD: {url} contains tool gc-pg-hlpfl in the HTML IDs.")
-
-    # If the response code is 404, delete the current entry from the spreadsheet
-    elif response is not None and response.status_code == 404:
-        print(f"{counter}, NO RESPONSE: Deleting entry with URL {url}")
-        sheet.delete_rows(counter)  # delete current row at counter
-        counter -= 1  # decrement counter since row has been deleted
-        time.sleep(1)
-
-    elif response is not None and response.status_code == 200 and "gc-pg-hlpfl" not in response.text:
-        print(f"{counter}, BAD: no tool, deleting entry with URL because it does not contain pg-hlpfl: {url}")
-        sheet.delete_rows(counter)  # delete current row at counter
-        counter -= 1  # decrement counter since row has been deleted
-        time.sleep(1)
-
-    # Print the response status code and URL
-    elif response is not None:
-        print(f"{counter}, Response: {response}, URL: {url}")
-
-    else:
-        print(f"{counter}, No response: {url}")
-
-    # print(response.text)
-    print("--------------")
+        if "gc-pg-hlpfl" in response.text or "page-feedback" in response.text:
+            print(f"{counter}, GOOD: {url} contains tool gc-pg-hlpfl in the HTML IDs.")
+        elif response.status_code == 404:
+            print(f"{counter}, NO RESPONSE: Deleting entry with URL {url}")
+            deleted_rows += 1
+            row_deletions.append(counter)
+        elif response.status_code == 200 and (
+            "gc-pg-hlpfl" not in response.text or "page-feedback" not in response.text
+        ):
+            print(f"{counter}, BAD: No tool, deleting entry with URL: {url}")
+            bad_rows += 1
+            row_deletions.append(counter)
+        else:
+            print(f"{counter}, Response: {response.status_code}, URL: {url}")
 
     counter += 1
+
+# Apply all updates in one batch request
+if updates:
+    sheet.batch_update(updates)
+
+# Delete rows in reverse order to avoid changing the indices of remaining rows
+for row_num in reversed(row_deletions):
+    sheet.delete_rows(row_num)
+
+print("Update and deletion process completed.")
+print(f"Updated rows: {updated_rows}")
+print(f"Deleted rows (no response): {deleted_rows}")
+print(f"Bad rows (no tool): {bad_rows}")
