@@ -10,7 +10,7 @@ from notifications_python_client.notifications import NotificationsAPIClient
 # get api key from config file and get data from AirTabe
 config = ConfigParser()
 config.read("../../config/config.ini")
-dbConnectionString = config.get("default", "mongo_db")
+dbConnectionString = config.get("default", "mongo_db_read")
 email_address = config.get("default", "email_address")
 NOTIFY_KEY = config.get("default", "detect_threats_API")
 TEMPLATE_ID = config.get("default", "template_ID")
