@@ -5,11 +5,13 @@ on:
       - master
     paths:
       - "src/detect_threats_and_email/**"
+      - "config/config.ini.gpg"
   pull_request:
     branches:
       - master
     paths:
       - "src/detect_threats_and_email/**"
+      - "config/config.ini.gpg"
 jobs:
   build:
     runs-on: ubuntu-latest
