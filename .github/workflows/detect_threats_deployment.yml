@@ -12,6 +12,7 @@ on:
     paths:
       - "src/detect_threats_and_email/**"
       - "config/config.ini.gpg"
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
