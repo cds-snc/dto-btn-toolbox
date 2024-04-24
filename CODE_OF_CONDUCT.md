@@ -1,8 +1,8 @@
-# Contributor Covenant Code of Conduct for the `Alpha Canada.ca` project
+# Contributor Covenant Code of Conduct for the `cds-snc` project
 
-([Français](#Code-de-conduite-pour-le-projet-Alpha-Canada.ca))
+([Français](#Code-de-conduite-pour-le-projet-cds-snc.ca))
 
-Contributors to repositories hosted in [`alpha-canada-ca`](https://github.com/alpha-canada-ca/) are expected to follow the Contributor Covenant Code of Conduct, and those working within Government are also expected to follow the Values and Ethics Code for the Public Sector
+Contributors to repositories hosted in [`cds-snc`](https://github.com/cds-snc/) are expected to follow the Contributor Covenant Code of Conduct, and those working within Government are also expected to follow the Values and Ethics Code for the Public Sector
 
 ## Values and Ethics Code for the Public Sector
 
@@ -62,11 +62,11 @@ This Code of Conduct is also inspired by GDS' `alphagov` [Code of conduct](https
 
 ______________________
 
-# Code de conduite pour le projet `Alpha Canada.ca`
+# Code de conduite pour le projet `cds-snc`
 
-([English](#Contributor-Covenant-Code-of-Conduct-for-the-Alpha-Canada.ca-project))
+([English](#Contributor-Covenant-Code-of-Conduct-for-the-cds-snc-project))
 
-Les contributeurs aux dépôts hébergés dans [`Alpha-Canada-ca`](https://github.com/alpha-canada-ca/) sont tenus de respecter le Code de conduite du Pacte des contributeurs, et ceux qui travaillent au sein du gouvernement sont également tenus de respecter le Code de valeurs et d'éthique du secteur public.
+Les contributeurs aux dépôts hébergés dans [`cds-snc`](https://github.com/cds-snc/) sont tenus de respecter le Code de conduite du Pacte des contributeurs, et ceux qui travaillent au sein du gouvernement sont également tenus de respecter le Code de valeurs et d'éthique du secteur public.
 
 ## Notre engagement
 
