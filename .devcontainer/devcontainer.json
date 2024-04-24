@@ -1,5 +1,5 @@
 {
-	"name": "site-reliability-engineering",
+	"name": "dto-btn-toolbox",
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
 	"containerEnv": {
 		"SHELL": "/bin/zsh"
