@@ -1,0 +1,39 @@
+{
+	"name": "dto-btn-toolbox",
+	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
+	"containerEnv": {
+		"SHELL": "/bin/zsh"
+	},
+	"remoteEnv": {
+		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}"
+	},	
+	"features": {
+		"ghcr.io/devcontainers/features/aws-cli:1": {},
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/devcontainers-contrib/features/neovim-apt-get:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"version": "1.8.2",
+			"terragrunt": "0.57.9"
+		},
+		"ghcr.io/devcontainers-contrib/features/tmux-apt-get:1": {}
+	},	
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"github.copilot",
+				"redhat.vscode-yaml",
+				"GitHub.copilot-chat"
+			]
+		},
+		"codespaces": {
+			"extensions": [
+				"ms-python.python",
+				"github.copilot",
+				"redhat.vscode-yaml",
+				"GitHub.copilot-chat"
+			]
+		}		
+	},
+	"remoteUser": "vscode"
+}
