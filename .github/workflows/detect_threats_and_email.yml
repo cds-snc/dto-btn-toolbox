@@ -12,10 +12,6 @@ env:
   COSMOS_MONGO_READ_URI: ${{ secrets.COSMOS_MONGO_READ_URI }}
   DTO_TEAM_INBOX: ${{ secrets.DTO_TEAM_INBOX }}
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   detect-threats-report:
     runs-on: ubuntu-latest
