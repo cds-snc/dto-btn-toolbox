@@ -1,19 +1,25 @@
-from configparser import ConfigParser
-from pymongo import MongoClient
-from bson import ObjectId
-from datetime import datetime, timedelta
-from bson.regex import Regex
+"""
+This module is designed to detect potential threats from database entries within the last N days using specified keywords in English and French. 
+It connects to a MongoDB database, reads entries, and searches for these keywords. If threats are detected, it formats the results and sends an email report using the Notify API client. 
+This system is used for monitoring and reporting potentially harmful or threatening content.
+
+Environment variables used:
+- COSMOS_MONGO_READ_URI: MongoDB connection string.
+- NOTIFY_DETECT_THREATS_API: API key for Notify service.
+- NOTIFY_DETECT_THREATS_TEMPLATE_ID: Template ID for email notifications.
+- DTO_TEAM_INBOX: Email address of the DTO team inbox.
+"""
 import os
+from datetime import datetime, timedelta
+from pymongo import MongoClient
+from bson.regex import Regex
 
 from notifications_python_client.notifications import NotificationsAPIClient
 
-# get api key from config file and get data from AirTabe
-config = ConfigParser()
-config.read("../../config/config.ini")
-dbConnectionString = config.get("default", "mongo_db_read")
-email_address = config.get("default", "email_address")
-NOTIFY_KEY = config.get("default", "detect_threats_API")
-TEMPLATE_ID = config.get("default", "template_ID")
+dbConnectionString = os.getenv("COSMOS_MONGO_READ_URI", None)
+EMAIL_ADDRESS = os.getenv("DTO_TEAM_INBOX", None)
+NOTIFY_KEY = os.getenv("NOTIFY_DETECT_THREATS_API", None)
+TEMPLATE_ID = os.getenv("NOTIFY_DETECT_THREATS_TEMPLATE_ID", None)
 client = MongoClient(dbConnectionString)
 print("Connected to DB.")
 problem = client.pagesuccess.problem
@@ -34,6 +40,18 @@ print(problemCount)
 
 # Function to read threat words from a file
 def read_threat_words(file_path):
+    """
+    Read threat keywords from a specified file.
+
+    This function opens a file from the given file path, reads its content, and returns a list of words. 
+    Each word is expected to be separated by a comma. The function ensures that words are treated as whole words using regex boundaries.
+
+    Args:
+        file_path (str): The path to the file containing threat keywords.
+
+    Returns:
+        list of str: A list containing the formatted regex strings for each keyword.
+    """
     with open(file_path, "r", encoding="utf-8") as file:
         return [
             f"\\b{word.strip()}\\b" for word in file.read().split(",") if word.strip()
@@ -119,7 +137,7 @@ def send_report(notify_client, recipients, report_template_id, report_personalis
 
 send_report(
     get_notify_client(),
-    [email_address],
+    [EMAIL_ADDRESS],
     TEMPLATE_ID,
     {
         "entries": formatted_output,
