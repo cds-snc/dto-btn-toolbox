@@ -19,4 +19,4 @@ COPY config/cacert-2023-01-10.pem /usr/config/cacert-2023-01-10.pem
 EXPOSE 80
 
 # Command to run the application
-CMD ["python", "./PFT_detect_threats_and_email.py"]
+CMD ["python", "./pft_detect_threats_and_email.py"]
