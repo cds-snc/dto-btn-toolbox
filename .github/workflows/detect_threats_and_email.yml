@@ -3,12 +3,12 @@ name: Detected threats report
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 12 * * *" # 12pm UTC every day 
+    - cron: "0 12 * * *" # 12pm UTC every day
 
 env:
   APPLICATION_SECRETS_PASSPHRASE: ${{ secrets.APPLICATION_SECRETS_PASSPHRASE }}
   NOTIFY_DETECT_THREATS_API: ${{ secrets.NOTIFY_DETECT_THREATS_API }}
-  NOTIFY_TEMPLATE_ID: ${{ secrets.NOTIFY_DETECT_THREATS_TEMPLATE_ID }}
+  NOTIFY_DETECT_THREATS_TEMPLATE_ID: ${{ secrets.NOTIFY_DETECT_THREATS_TEMPLATE_ID }}
   COSMOS_MONGO_READ_URI: ${{ secrets.COSMOS_MONGO_READ_URI }}
   DTO_TEAM_INBOX: ${{ secrets.DTO_TEAM_INBOX }}
 
@@ -22,7 +22,7 @@ jobs:
           DNS_PROXY_FORWARDTOSENTINEL: "true"
           DNS_PROXY_LOGANALYTICSWORKSPACEID: ${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}
           DNS_PROXY_LOGANALYTICSSHAREDKEY: ${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
-      
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -30,7 +30,7 @@ jobs:
         run: ./scripts/decrypt_secrets.sh
         env:
           APPLICATION_SECRETS_PASSPHRASE: ${{ secrets.APPLICATION_SECRETS_PASSPHRASE }}
-      
+
       - name: Create daily threat report
         working-directory: ./src/detect_threats_and_email
         run: |
