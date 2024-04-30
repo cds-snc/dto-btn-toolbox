@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dto-btn-toolbox 
+  description: A collection of scripts used by the Digital Transformation Office.
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: website
+  owner: group:cds-snc/digital-transformation-office
+  lifecycle: experimental
+  domain: dto 
