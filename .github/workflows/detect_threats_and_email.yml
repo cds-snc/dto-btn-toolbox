@@ -1,0 +1,35 @@
+name: Detected threats report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *" # 12pm UTC every day 
+
+env:
+  APPLICATION_SECRETS_PASSPHRASE: ${{ secrets.APPLICATION_SECRETS_PASSPHRASE }}
+  NOTIFY_KEY: ${{ secrets.NOTIFY_DETECT_THREATS_API }}
+  NOTIFY_TEMPLATE_ID: ${{ secrets.NOTIFY_DETECT_THREATS_TEMPLATE_ID }}
+  COSMOS_MONGO_READ_URI: ${{ secrets.COSMOS_MONGO_READ_URI }}
+  DTO_TEAM_INBOX: ${{ secrets.DTO_TEAM_INBOX }}
+
+jobs:
+  detect-threats-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Audit DNS requests
+        uses: cds-snc/dns-proxy-action@main
+        env:
+          DNS_PROXY_FORWARDTOSENTINEL: "true"
+          DNS_PROXY_LOGANALYTICSWORKSPACEID: ${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}
+          DNS_PROXY_LOGANALYTICSSHAREDKEY: ${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
+      
+      - name: Decrypt secret files
+        run: ./scripts/decrypt_secrets.sh
+        env:
+          APPLICATION_SECRETS_PASSPHRASE: ${{ secrets.APPLICATION_SECRETS_PASSPHRASE }}
+      
+      - name: Create daily threat report
+        working-directory: ./src/detect_threats_and_email
+        run: |
+          make install
+          make
