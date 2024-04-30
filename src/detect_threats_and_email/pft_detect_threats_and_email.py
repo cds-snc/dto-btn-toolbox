@@ -110,10 +110,6 @@ for doc in problem.find(threats_in_past_n_days_query):
             formatted_output += f"**{field}**: {value}\n"
     formatted_output += "\n"  # Adds an extra newline for separation between documents
 
-# Now formatted_output contains the entire formatted string
-print(formatted_output)
-
-
 def get_notify_client():
     """
     Get the Notify client.
