@@ -23,6 +23,9 @@ jobs:
           DNS_PROXY_LOGANALYTICSWORKSPACEID: ${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}
           DNS_PROXY_LOGANALYTICSSHAREDKEY: ${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
       
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Decrypt secret files
         run: ./scripts/decrypt_secrets.sh
         env:
